@@ -1,0 +1,22 @@
+-----------------------Get music files on Android in React Native-----------------------
+
+- STEP 1: Install necessary modules 'react-native-get-music-files'
++ Install 'react-native-get-music-files': npm install --save react-native-get-music-files
++ Link: react-native link react-native-get-music-files
+- STEP 2: Edit file 'android/settings.gradle'
+	Replace '..\node_modules\react-native-get-music-files\android' to '../node_modules/react-native-get-music-files/android'
+- STEP 3: Require to 'read, write storage permissions' using 'react-native-permissions'
+(link: https://github.com/yonahforst/react-native-permissions):
++ Install 'react-native-permissions':
+	npm i --save react-native-permissions
+	react-native link react-native-permissions
++ Grant permissions: storage
+- STEP 4: Add model TrackInfo with these attributes:
++ id
++ artist
++ duration
++ genre
++ title
++ minimumSongDuration
+- STEP 5: Render all tracks on phones
+
