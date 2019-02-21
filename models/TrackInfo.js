@@ -5,6 +5,8 @@ export default class TrackInfo {
     genre: string;
     title: string;
     fileName: string;
+    path: string;
+    track: any;
 
     constructor(trackInfo: any) {
         if (trackInfo) {
@@ -20,6 +22,8 @@ export default class TrackInfo {
                 this.title = trackInfo['title'];
             if (trackInfo['fileName'])
                 this.fileName = trackInfo['fileName'];
+            if (trackInfo['path'])
+                this.path = trackInfo['path'];
         }
     }
 }

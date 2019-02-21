@@ -14,10 +14,13 @@ import {
   View,
   ToastAndroid,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native'
 
 import MusicFiles from 'react-native-get-music-files';
 import TrackInfo from './models/TrackInfo';
+
+let Sound = require('react-native-sound');
 
 export default class App extends Component {
 
@@ -40,6 +43,12 @@ export default class App extends Component {
         if (tracks[i]) {
           let trackInfo = new TrackInfo(tracks[i]);
           trackInfoArray.push(trackInfo);
+
+          if (!trackInfo.track)
+            trackInfo.track = new Sound(trackInfo.path, Sound.MAIN_BUNDLE, (error) => {
+              if (error)
+                ToastAndroid.show(`failed to load the sound: ${error}`, ToastAndroid.SHORT);
+            });
         }
       }
       this.setState({ trackInfoArray });
@@ -49,11 +58,32 @@ export default class App extends Component {
     });
   }
 
+  playTrack = (trackInfo: TrackInfo) => {
+    if (trackInfo && trackInfo.track) {
+      trackInfo.track.play((success: boolean) => {
+        if (success)
+          ToastAndroid.show(`Play ${trackInfo.fileName} successfully!`, ToastAndroid.SHORT);
+        else ToastAndroid.show(`Play ${trackInfo.fileName} failed!`, ToastAndroid.SHORT);
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    for (let i = 0; i < this.state.trackInfoArray.length; i++) {
+      let trackInfo = this.state.trackInfoArray[i];
+      if (trackInfo && trackInfo.track)
+        trackInfo.track.release();
+    }
+  }
+
   renderTrackInfoArray = () => {
     let result;
     result = this.state.trackInfoArray.map((trackInfo: TrackInfo, index: number) => 
       <View key={index} style={styles.trackInfoContainer}>
-        <Text key={index} style={styles.trackInfo}>{trackInfo.fileName}, duration: {trackInfo.duration / 1000}s</Text>
+        <Text key={index} style={styles.trackInfo}>{trackInfo.path}, duration: {trackInfo.duration / 1000}s</Text>
+        <TouchableOpacity style={styles.playButtonContainer} onPress={() => this.playTrack(trackInfo)}>
+          <Text style={styles.playText}>Play/Pause</Text>
+        </TouchableOpacity>
       </View>
     );
     return result;
@@ -78,5 +108,16 @@ const styles = StyleSheet.create({
   },
   trackInfo: {
     fontSize: 20,
+  },
+  playText: {
+    fontSize: 20,
+    color: 'white',
+  },
+  playButtonContainer: {
+    padding: 15,
+    backgroundColor: 'blue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
   },
 });
