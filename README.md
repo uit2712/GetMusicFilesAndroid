@@ -20,5 +20,5 @@ artist
 duration
 genre
 title
-minimumSongDuration
+minimumSongDuration<br>
 <b>5) STEP 5:</b> Render all tracks on phone
